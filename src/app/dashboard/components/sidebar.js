@@ -1,28 +1,44 @@
-// src/app/dashboard/components/sidebar.js
-import React from 'react';
+'use client';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+
 import { LuLayoutDashboard } from "react-icons/lu";
-import { IoServerSharp } from "react-icons/io5";
-import { FaBoxTissue } from "react-icons/fa6";
-import { GiNetworkBars } from "react-icons/gi";
-import { FaUser } from "react-icons/fa";
+import { IoServerSharp, IoSettingsSharp } from "react-icons/io5";
+import { FaBoxTissue, FaUser } from "react-icons/fa6";
 import { GoReport } from "react-icons/go";
-import { IoSettingsSharp } from "react-icons/io5";
+import { GiNetworkBars } from "react-icons/gi";
 import { MdOutlineModeNight } from "react-icons/md";
 
+import { applyTheme, getSavedTheme } from "../utilis/Theme";
+
+
 const Sidebar = () => {
+  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    const saved = getSavedTheme();
+    setDarkMode(saved === 'dark');
+    applyTheme(saved);
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = darkMode ? 'light' : 'dark';
+    setDarkMode(!darkMode);
+    applyTheme(newTheme);
+  };
+
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
         <span className="logo-icon">IT</span> Management
       </div>
+
       <nav className="sidebar-nav">
         <ul>
           <li>
             <Link href="/dashboard" className="nav-item active">
-            <span><LuLayoutDashboard /></span> Dashboard
+              <span><LuLayoutDashboard /></span> Dashboard
             </Link>
-         
             <Link href="/dashboard/server" className="nav-item">
               <span><IoServerSharp /></span> Servers <span className="count">12</span>
             </Link>
@@ -45,22 +61,23 @@ const Sidebar = () => {
               <span><FaUser /></span> Users
             </Link>
           </li>
-          
+
           <li>
             <Link href="/dashboard/report" className="nav-item">
               <span><GoReport /></span> Reports <span className="count">89</span>
             </Link>
           </li>
+
           <li>
             <Link href="/dashboard/setting" className="nav-item">
-              <span><IoSettingsSharp /></span> Settings 
+              <span><IoSettingsSharp /></span> Settings
             </Link>
           </li>
-        
         </ul>
       </nav>
-      <div className="sidebar-footer">
-          <span><MdOutlineModeNight /> Dark Mode</span>
+
+      <div className="sidebar-footer" onClick={toggleTheme} style={{ cursor: 'pointer' }}>
+        <span><MdOutlineModeNight /> {darkMode ? 'Light Mode' : 'Dark Mode'}</span>
       </div>
     </aside>
   );
